@@ -129,6 +129,11 @@ class InfluxReporter extends AbstractPollingReporter implements MetricProcessor<
 
     @Override
     public void processGauge(MetricName name, Gauge<?> gauge, Context context) throws Exception {
+        // Skip ClusterId
+        // See https://cwiki.apache.org/confluence/display/KAFKA/KIP-78%3A+Cluster+Id
+        if (name.getType().equals("KafkaServer") && name.getName().equals("ClusterId")) {
+            return;
+        }
 
         Point point = buildPoint(name, context);
         Object fieldValue = gauge.value();
