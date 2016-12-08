@@ -73,7 +73,7 @@ class InfluxDBClient {
                         .addQueryParam("q", "CREATE DATABASE " + database))
                         .get();
         } catch (Exception e) {
-            LOG.error("Cannot create database {}", database);
+            LOG.error("Cannot create database {}, error: {}", database, e);
         }
         return this.isDatabaseCreated;
     }
@@ -127,7 +127,7 @@ class InfluxDBClient {
             public State onStatusReceived(HttpResponseStatus httpResponseStatus) throws Exception {
                 int statusCode = httpResponseStatus.getStatusCode();
                 if (statusCode != 200 && statusCode != 204 ) {
-                    LOG.warn("Unexpected response status from InfluxDB '{}' - '{}'", statusCode, httpResponseStatus.getStatusText());
+                    LOG.warn("Unexpected response status from InfluxDB '{}' - '{}' Uri: {}", statusCode, httpResponseStatus.getStatusText(), httpResponseStatus.getUri());
                 }
                 return null;
             }
